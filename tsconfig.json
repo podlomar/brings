@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "outDir": "dist",
+      "target": "es2020",
+      "module": "nodenext",
+      "lib": ["dom", "es2020"],
+      "declaration": true,
+      "strict": true,
+      "noImplicitAny": true,
+      "esModuleInterop": true,
+      "moduleResolution": "nodenext"
+    },
+    "include": ["src", "test"],
+    "exclude": ["node_modules"]
+  }
+  
