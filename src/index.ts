@@ -1,7 +1,7 @@
 import { RequestBody } from "./body.js";
 
 interface FetchParams {
-  readonly url: string;
+  readonly url: URL;
   readonly method: string;
   readonly headers: Record<string, string>;
   readonly body: RequestBody | null;
@@ -39,7 +39,7 @@ export class RequestBuilder {
 
   public static create(url: string): RequestBuilder {
     return new RequestBuilder({
-      url,
+      url: new URL(url),
       method: 'GET',
       headers: {},
       body: null,
@@ -52,6 +52,19 @@ export class RequestBuilder {
 
   public body(requestBody: RequestBody): RequestBuilder {
     return new RequestBuilder({ ...this.fetchParams, body: requestBody });
+  }
+
+  public header(name: string, value: string): RequestBuilder {
+    return new RequestBuilder({
+      ...this.fetchParams,
+      headers: { ...this.fetchParams.headers, [name]: value },
+    });
+  }
+
+  public param(name: string, value: string): RequestBuilder {
+    const newUrl = new URL(this.fetchParams.url.toString());
+    newUrl.searchParams.append(name, value);
+    return new RequestBuilder({ ...this.fetchParams, url: newUrl });
   }
 
   public async trigger(): Promise<unknown> {
