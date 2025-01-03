@@ -27,5 +27,16 @@
   "bugs": {
     "url": "https://github.com/podlomar/brings/issues"
   },
-  "homepage": "https://github.com/podlomar/brings#readme"
+  "homepage": "https://github.com/podlomar/brings#readme",
+  "keywords": [
+    "fetch",
+    "http",
+    "typescript",
+    "type-safe",
+    "declarative",
+    "functional"
+  ],
+  "files": [
+    "dist"
+  ]
 }
