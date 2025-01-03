@@ -1,2 +1,3 @@
-# bringy
-A declarative type-safe fetching library
+# brings
+
+A declarative type-safe HTTP fetching library

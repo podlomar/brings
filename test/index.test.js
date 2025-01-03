@@ -1,7 +1,7 @@
 import nock from 'nock';
 import { expect } from 'chai';
 import { describe, it, before } from 'mocha';
-import { bringy } from '../dist/index.js';
+import { brings } from '../dist/index.js';
 
 const URL = 'http://bringy.test';
 
@@ -13,10 +13,7 @@ describe('bringy', () => {
   });
 
   it('should fetch json', async () => {
-    const data = await bringy(URL).fetchJson();
+    const data = await brings(URL).trigger();
     expect(data).to.deep.equal({ payload: 'payload' });
   });
 });
-
-
-

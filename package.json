@@ -1,7 +1,7 @@
 {
-  "name": "fetchdog",
+  "name": "brings",
   "version": "0.0.0",
-  "description": "Type-safe declarative HTTP fetch client",
+  "description": "A declarative type-safe HTTP fetching library",
   "main": "index.js",
   "types": "index.d.ts",
   "type": "module",
@@ -9,9 +9,6 @@
     "dev": "tsc -w",
     "test": "mocha test/**/*.test.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "chai": "^5.1.2",
     "mocha": "^11.0.1",
@@ -20,5 +17,15 @@
   },
   "dependencies": {
     "monadix": "^1.0.6"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/podlomar/brings.git"
+  },
+  "author": "Martin Podloucký",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/podlomar/brings/issues"
+  },
+  "homepage": "https://github.com/podlomar/brings#readme"
 }
