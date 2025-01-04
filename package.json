@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsc -w",
-    "test": "mocha -r ts-node/register 'tests/**/*.ts'"
+    "test": "env TS_NODE_PROJECT='./tsconfig.json' mocha"
   },
   "devDependencies": {
     "@types/chai": "^5.0.1",
