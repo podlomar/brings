@@ -20,7 +20,7 @@ describe('brings', () => {
 
   it('should fetch json', async () => {
     const data = await brings(URL)
-      .response(json())
+      .parse(json())
       .trigger();
     expect(data).to.deep.equal({ payload: 'payload' });
   });

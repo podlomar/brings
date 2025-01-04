@@ -70,7 +70,7 @@ export class BringsConfig<TData> {
     );
   }
 
-  public response<TNextData>(responseParser: ResponseParser<TNextData>): BringsConfig<TNextData> {
+  public parse<TNextData>(responseParser: ResponseParser<TNextData>): BringsConfig<TNextData> {
     return new BringsConfig(this.fetchParams, responseParser);
   }
 
@@ -141,10 +141,10 @@ export class RequestBuilder<TData> implements Triggable<TData> {
     return new RequestBuilder(this.config.param(name, value));
   }
 
-  public response<TNextData>(
+  public parse<TNextData>(
     responseParser: ResponseParser<TNextData>
   ): ResponseBuilder<TNextData> {
-    return new ResponseBuilder(this.config.response(responseParser));
+    return new ResponseBuilder(this.config.parse(responseParser));
   }
 
   public async trigger(): Promise<TData> {
