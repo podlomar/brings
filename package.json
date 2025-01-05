@@ -7,7 +7,9 @@
   "type": "module",
   "scripts": {
     "dev": "tsc -w",
-    "test": "env TS_NODE_PROJECT='./tsconfig.json' mocha"
+    "build": "rimraf dist && tsc",
+    "test": "env TS_NODE_PROJECT='./tsconfig.json' mocha",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@types/chai": "^5.0.1",
@@ -15,11 +17,24 @@
     "chai": "^5.1.2",
     "mocha": "^11.0.1",
     "nock": "^14.0.0-beta.19",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   },
   "dependencies": {
     "monadix": "^1.0.6"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./parser": {
+      "import": "./dist/parser.js",
+      "require": "./dist/parser.js",
+      "types": "./dist/parser.d.ts"
+    }
   },
   "repository": {
     "type": "git",

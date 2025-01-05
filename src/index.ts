@@ -1,6 +1,6 @@
 import { RequestBody } from "./body.js";
 import { HttpError } from "./errors.js";
-import { ResponseParser, blob } from "./response-parser.js";
+import { ResponseParser, blob } from "./parser.js";
 
 interface FetchParams {
   readonly url: URL;
@@ -114,7 +114,10 @@ export const triggerFetch = async <TData, TError>(
   try {
     const response = await fetch(url, {
       method,
-      headers,
+      headers: {
+        ...headers,
+        'Content-Type': body?.contentType ?? '',
+      },
       body: body?.init ?? null,
     });
     

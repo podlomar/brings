@@ -7,7 +7,6 @@ export class ResponseError extends Error {
   }
 }
 
-
 export class HttpError extends ResponseError {
   public constructor(response: Response) {
     super(response, `HTTP error ${response.status} ${response.statusText}`);
