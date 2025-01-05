@@ -17,17 +17,19 @@ export type Caught<TError> = {
   error: TError;
 } | 'unknown';
 
+type MapFn<TData, TNextData> = (data: TData) => TNextData;
+
 type CatchHttpFn<TError> = (error: HttpError) => Caught<TError>;
 
 export class BringsConfig<TData, TError> {
   private fetchParams: FetchParams;
   private responseParser: ResponseParser<TData>;
-  private catchHttpFn?: CatchHttpFn<TError>;
+  private catchHttpFn: CatchHttpFn<TError>;
 
   private constructor(
     fetchParams: FetchParams,
     responseParser: ResponseParser<TData>,
-    catchHttpFn?: CatchHttpFn<TError>,
+    catchHttpFn: CatchHttpFn<TError>,
   ) {
     this.fetchParams = fetchParams;
     this.responseParser = responseParser;
@@ -43,24 +45,31 @@ export class BringsConfig<TData, TError> {
         body: null,
       },
       blob(),
+      () => 'unknown',
     );
   }
 
   public url(url: string): BringsConfig<TData, TError> {
     return new BringsConfig(
-      { ...this.fetchParams, url: new URL(url) }, this.responseParser,
+      { ...this.fetchParams, url: new URL(url) },
+      this.responseParser,
+      this.catchHttpFn,
     );
   }
 
   public method(method: string): BringsConfig<TData, TError> {
     return new BringsConfig(
-      { ...this.fetchParams, method }, this.responseParser,
+      { ...this.fetchParams, method },
+      this.responseParser,
+      this.catchHttpFn,
     );
   }
 
   public body(body: RequestBody): BringsConfig<TData, TError> {
     return new BringsConfig(
-      { ...this.fetchParams, body }, this.responseParser,
+      { ...this.fetchParams, body },
+      this.responseParser,
+      this.catchHttpFn,
     );
   }
 
@@ -71,6 +80,7 @@ export class BringsConfig<TData, TError> {
         headers: { ...this.fetchParams.headers, [name]: value },
       },
       this.responseParser,
+      this.catchHttpFn,
     );
   }
 
@@ -78,14 +88,20 @@ export class BringsConfig<TData, TError> {
     const newUrl = new URL(this.fetchParams.url.toString());
     newUrl.searchParams.append(name, value);
     return new BringsConfig(
-      { ...this.fetchParams, url: newUrl }, this.responseParser,
+      { ...this.fetchParams, url: newUrl },
+      this.responseParser,
+      this.catchHttpFn,
     );
   }
 
   public parse<TNextData>(
     responseParser: ResponseParser<TNextData>
   ): BringsConfig<TNextData, TError> {
-    return new BringsConfig(this.fetchParams, responseParser);
+    return new BringsConfig(
+      this.fetchParams,
+      responseParser,
+      this.catchHttpFn,
+    );
   }
 
   public catchHttp<TNextError>(

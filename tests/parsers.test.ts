@@ -6,6 +6,10 @@ import { json, blob, text, arrayBuffer, formData } from '../dist/parser.js';
 
 const URL = 'http://brings.test';
 
+interface Payload {
+  content: string;
+}
+
 describe('Response parsers', () => {
   it('should fetch implicit blob', async () => {
     nock(URL).get('/').reply(200, 'payload');
@@ -22,11 +26,11 @@ describe('Response parsers', () => {
   });
 
   it('should fetch json', async () => {
-    nock(URL).get('/').reply(200, { payload: 'payload' });
+    nock(URL).get('/').reply(200, { content: 'payload' });
     const data = await brings(URL)
       .parse(json())
       .trigger();
-    expect(data).to.deep.equal({ payload: 'payload' });
+    expect(data).to.deep.equal({ content: 'payload' });
   });
 
   it('should fetch text', async () => {
@@ -52,4 +56,14 @@ describe('Response parsers', () => {
   //     .trigger();
   //   expect(data).to.be.an.instanceof(FormData);
   // });
+
+  it('should fetch json and map', async () => {
+    nock(URL).get('/').reply(200, { content: 'payload' });
+    const data = await brings(URL)
+      .parse(
+        json<Payload>().map((data) => data.content)
+      )
+      .trigger();
+    expect(data).to.equal('payload');
+  });
 });
