@@ -220,7 +220,7 @@ interface BringsFactory {
   (config: BringsConfig<Blob, never>): Brings<Blob, never>;
 }
 
-export const brings = ((
+const brings = ((
   urlOrConfig: string | BringsConfig<Blob, never>
 ): RequestBuilder<Blob, never> | Brings<Blob, never> => {
   if (typeof urlOrConfig === 'string') {
@@ -229,3 +229,5 @@ export const brings = ((
 
   return new Brings<Blob, never>(urlOrConfig);
 }) as BringsFactory;
+
+export default brings;

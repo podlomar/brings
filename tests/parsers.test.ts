@@ -1,7 +1,7 @@
 import nock from 'nock';
 import { expect } from 'chai';
 import { describe, it, before } from 'mocha';
-import { brings, Caught } from '../dist/index.js';
+import brings from '../dist/index.js';
 import { json, blob, text, arrayBuffer, formData } from '../dist/parser.js';
 
 const URL = 'http://brings.test';
