@@ -17,8 +17,6 @@ export type Caught<TError> = {
   error: TError;
 } | 'unknown';
 
-type MapFn<TData, TNextData> = (data: TData) => TNextData;
-
 type CatchHttpFn<TError> = (error: HttpError) => Caught<TError>;
 
 export class BringsConfig<TData, TError> {
