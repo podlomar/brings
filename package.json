@@ -9,7 +9,8 @@
     "dev": "tsc -w",
     "build": "rimraf dist && tsc",
     "test": "env TS_NODE_PROJECT='./tsconfig.json' mocha",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "next-ver": "npm version prerelease --preid=alpha"
   },
   "devDependencies": {
     "@types/chai": "^5.0.1",
