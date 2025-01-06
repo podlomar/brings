@@ -1,6 +1,7 @@
 import { RequestBody } from "./body.js";
 import { HttpError } from "./errors.js";
 import { ResponseParser, blob } from "./parser.js";
+import { BringsResult } from "./result.js";
 
 interface FetchParams {
   readonly url: URL;
@@ -9,8 +10,9 @@ interface FetchParams {
   readonly body: RequestBody | null;
 }
 
-interface Triggable<TResult> {
-  trigger(): Promise<TResult>;
+interface Triggable<TData, TError> {
+  trigger(): Promise<TData | TError>;
+  bring(): Promise<BringsResult<TData, TError>>;
 }
 
 export type Caught<TError> = {
@@ -123,7 +125,7 @@ export class BringsConfig<TData, TError> {
 
 export const triggerFetch = async <TData, TError>(
   config: BringsConfig<TData, TError>
-): Promise<TData | TError> => {
+): Promise<BringsResult<TData, TError>> => {
   const { url, method, headers, body } = config.getFetchParams();
   try {
     const response = await fetch(url, {
@@ -147,11 +149,15 @@ export const triggerFetch = async <TData, TError>(
         throw error;
       }
       
-      return caught.error;
+      return {
+        status: 'error',
+        error: caught.error,
+      }
     }
 
     const responseParser = config.getResponseParser();
-    return responseParser.parse(response);
+    const data = await responseParser.parse(response);
+    return { status: 'ok', data };
   } catch (error) {
     if (error instanceof HttpError) {
       throw error;
@@ -161,7 +167,7 @@ export const triggerFetch = async <TData, TError>(
   }
 }
 
-export class Brings<TData, TError> implements Triggable<TData | TError> {
+export class Brings<TData, TError> implements Triggable<TData, TError> {
   private readonly config: BringsConfig<TData, TError>;
 
   public constructor(config: BringsConfig<TData, TError>) {
@@ -169,11 +175,16 @@ export class Brings<TData, TError> implements Triggable<TData | TError> {
   }
 
   public async trigger(): Promise<TData | TError> {
+    const result = await triggerFetch(this.config);
+    return result.status === 'ok' ? result.data : result.error;
+  }
+
+  public async bring(): Promise<BringsResult<TData, TError>> {
     return triggerFetch(this.config);
   }
 }
 
-export class RequestBuilder<TData, TError> implements Triggable<TData | TError> {
+export class RequestBuilder<TData, TError> implements Triggable<TData, TError> {
   private config: BringsConfig<TData, TError>;
 
   private constructor(config: BringsConfig<TData, TError>) {
@@ -207,11 +218,16 @@ export class RequestBuilder<TData, TError> implements Triggable<TData | TError> 
   }
 
   public async trigger(): Promise<TData | TError> {
+    const result = await triggerFetch(this.config);
+    return result.status === 'ok' ? result.data : result.error;
+  }
+
+  public async bring(): Promise<BringsResult<TData, TError>> {
     return triggerFetch(this.config);
   }
 }
 
-export class ResponseBuilder<TData, TError> implements Triggable<TData | TError> {
+export class ResponseBuilder<TData, TError> implements Triggable<TData, TError> {
   private config: BringsConfig<TData, TError>;
 
   public constructor(config: BringsConfig<TData, TError>) {
@@ -224,7 +240,12 @@ export class ResponseBuilder<TData, TError> implements Triggable<TData | TError>
     return new ResponseBuilder(this.config.catchHttp(catchHttpFn));
   }
 
-  public trigger(): Promise<TData | TError> {
+  public async trigger(): Promise<TData | TError> {
+    const result = await triggerFetch(this.config);
+    return result.status === 'ok' ? result.data : result.error;
+  }
+
+  public async bring(): Promise<BringsResult<TData, TError>> {
     return triggerFetch(this.config);
   }
 }
