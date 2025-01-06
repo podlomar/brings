@@ -18,7 +18,7 @@ import brings from 'brings';
 const data = await brings('https://jsonplaceholder.typicode.com/posts/1').trigger();
 ```
 
-As you did not specify any response parsing, the `data` will be of type `Blob`. You can specify the response parsing by using the `parse` method:
+Here we did not specify any response parsing thus the `data` will be of type `Blob`. You can specify the response parsing by using the `parse` method:
 
 ```typescript
 import brings from 'brings';
@@ -45,6 +45,19 @@ const data = await brings('https://jsonplaceholder.typicode.com/posts/1')
 ```
 
 Now the `data` will be of type `Post`.
+
+### Data transformation
+
+Sometimes you want to immediately transform the received data to your own format. You can do this by using the `map` method:
+
+```typescript
+const data = await brings('https://jsonplaceholder.typicode.com/posts/1')
+  .parse(json<Post>().map((post) =>({
+    ...post,
+    title: post.title.toUpperCase(),
+  })))
+  .trigger();
+```
 
 You can also specify standard request options like headers, method and body:
 
